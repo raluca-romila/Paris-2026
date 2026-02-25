@@ -409,3 +409,48 @@ h1 {
     from { opacity: 0; transform: translateY(-5px); }
     to { opacity: 1; transform: translateY(0); }
 }
+
+@media (max-width: 600px) {
+    /* 1. Resetăm Header-ul să nu mai fie așa înalt */
+    .app-header {
+        padding: 1rem 0.5rem 0.5rem;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+    }
+
+    /* 2. Micșorăm titlul să aibă loc */
+    h1 {
+        font-size: 1.4rem;
+        margin-top: 10px;
+    }
+
+    /* 3. Mutăm Meteo sub titlu, nu deasupra, ca să nu se bată cu restul */
+    .weather-info {
+        position: static; /* Nu mai plutește deasupra tuturor */
+        margin-top: 5px;
+        font-size: 0.7rem;
+    }
+
+    /* 4. REZOLVARE FLAG-URI: Pe mobil, ascundem textul lor (label-ul) 
+       pentru că oricum e prea mic să fie citit și lăsăm doar drumul și fetele */
+    .flag-label {
+        display: none; 
+    }
+
+    .progress-container {
+        width: 80%;
+        margin: 20px auto 10px; /* Mai mult spațiu în jur */
+    }
+
+    .progress-avatar {
+        font-size: 1.2rem; /* Fetele un pic mai mici să fie proporționale */
+        top: -18px;
+    }
+
+    /* 5. Facem cardurile de zi (Ziua 1) să nu mai fie așa gigantice */
+    .day-title {
+        font-size: 1.2rem;
+        padding: 0.2rem 0.6rem;
+    }
+}

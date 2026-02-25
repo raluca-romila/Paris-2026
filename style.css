@@ -1,0 +1,411 @@
+:root {
+    --bg-color: #FAF6F0; 
+    --text-main: #2C2C2C; 
+    --accent-gold: #D4AF37;
+    --accent-pink: #E8C6C5;
+    --card-bg: rgba(255, 255, 255, 0.92); 
+}
+
+body {
+    margin: 0;
+    font-family: 'Montserrat', sans-serif;
+    color: var(--text-main);
+    background-image: 
+        linear-gradient(rgba(250, 246, 240, 0.40), rgba(250, 246, 240, 0.40)),
+        url('https://images.unsplash.com/photo-1550340499-a6c60fc8287c?q=80&w=2070&auto=format&fit=crop'); 
+    background-size: cover;
+    background-position: center center;
+    background-attachment: fixed;
+    background-repeat: no-repeat;
+}
+
+.app-header {
+    text-align: center;
+    padding: 1.5rem 1rem 1rem; /* Padding redus */
+    background: var(--card-bg);
+    border-bottom: 2px solid var(--accent-pink);
+    box-shadow: 0 4px 15px rgba(0,0,0,0.05);
+    position: sticky;
+    top: 0;
+    z-index: 100;
+    backdrop-filter: blur(10px);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 10px; /* Spațiu egal între elemente */
+}
+
+h1 {
+    font-family: 'Playfair Display', serif;
+    font-size: 1.8rem; /* Puțin mai mic pentru a lăsa spațiu drumului */
+    margin: 0;
+    color: var(--text-main);
+    letter-spacing: 2px;
+    text-transform: uppercase;
+}
+.subtitle {
+    font-size: 0.9rem;
+    font-style: italic;
+    color: #666;
+    margin-top: 5px;
+    margin-bottom: 10px;
+}
+
+.weather-info {
+    position: absolute;
+    top: 10px;
+    right: 15px;
+    font-size: 0.75rem;
+    background: rgba(255, 255, 255, 0.6);
+    padding: 4px 10px;
+    border-radius: 15px;
+    border: 1px solid var(--accent-pink);
+}
+#itinerary-container {
+    padding: 1.5rem 1rem;
+    max-width: 600px;
+    margin: 0 auto;
+}
+
+.day-section {
+    margin-bottom: 2.5rem;
+}
+
+.day-title {
+    font-family: 'Playfair Display', serif;
+    font-size: 1.8rem;
+    color: var(--text-main);
+    border-bottom: 2px solid var(--accent-gold);
+    margin-bottom: 1.2rem;
+    background: rgba(250, 246, 240, 0.85); 
+    display: inline-block;
+    padding: 0.3rem 0.8rem;
+    border-radius: 8px;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+}
+
+.card {
+    background: var(--card-bg);
+    border-radius: 12px;
+    padding: 1.2rem;
+    margin-bottom: 1rem;
+    box-shadow: 0 2px 10px rgba(0,0,0,0.04);
+    display: flex;
+    align-items: flex-start;
+    gap: 15px;
+    transition: transform 0.3s ease, opacity 0.3s ease, box-shadow 0.3s ease;
+    backdrop-filter: blur(5px); 
+    -webkit-backdrop-filter: blur(5px); 
+}
+
+.card:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 4px 15px rgba(0,0,0,0.08);
+}
+
+.card.completed {
+    opacity: 0.6;
+}
+
+.card.completed .card-title {
+    text-decoration: line-through;
+    color: #999;
+}
+
+.time-badge {
+    background: var(--accent-pink);
+    color: #fff;
+    padding: 4px 10px;
+    border-radius: 20px;
+    font-size: 0.8rem;
+    font-weight: 600;
+    display: inline-block;
+    margin-bottom: 8px;
+}
+
+.card-content {
+    flex: 1;
+}
+
+.card-title {
+    margin: 0 0 5px 0;
+    font-weight: 600;
+    font-size: 1.1rem;
+}
+
+.card-desc {
+    font-size: 0.85rem;
+    color: #555;
+    margin: 0;
+    line-height: 1.5;
+}
+
+/* Checkbox Customizat */
+.custom-checkbox {
+    width: 26px;
+    height: 26px;
+    border: 2px solid var(--accent-gold);
+    border-radius: 50%;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: all 0.3s ease;
+    flex-shrink: 0;
+    margin-top: 5px;
+    background: rgba(255, 255, 255, 0.6);
+}
+
+.completed .custom-checkbox {
+    background-color: var(--accent-gold);
+    border-color: var(--accent-gold);
+}
+
+.completed .custom-checkbox::after {
+    content: '✓';
+    color: white;
+    font-size: 16px;
+    font-weight: bold;
+}
+
+/* Elementele Noi: Accordion & Upload */
+.toggle-btn {
+    background: none;
+    border: none;
+    color: var(--accent-gold);
+    font-family: 'Montserrat', sans-serif;
+    font-weight: 600;
+    font-size: 0.8rem;
+    padding: 10px 0 0 0;
+    cursor: pointer;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    transition: color 0.3s ease;
+    outline: none;
+}
+
+.toggle-btn:hover {
+    color: #b5952f;
+}
+
+.details-panel {
+    display: none;
+    margin-top: 15px;
+    padding-top: 15px;
+    border-top: 1px dashed var(--accent-pink);
+    animation: fadeIn 0.4s ease-in-out;
+}
+
+.details-panel.active {
+    display: block;
+}
+
+.full-details-text {
+    font-size: 0.85rem;
+    color: #444;
+    line-height: 1.6;
+    margin-bottom: 15px;
+    font-style: italic;
+}
+
+.hidden-file-input {
+    display: none;
+}
+
+.upload-btn {
+    display: inline-block;
+    background-color: transparent;
+    border: 1px solid var(--accent-gold);
+    color: var(--text-main);
+    padding: 6px 15px;
+    border-radius: 20px;
+    font-size: 0.8rem;
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
+
+.upload-btn:hover {
+    background-color: var(--accent-gold);
+    color: white;
+}
+
+.image-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(70px, 1fr));
+    gap: 8px;
+    margin-top: 15px;
+}
+
+.grid-image {
+    width: 100%;
+    height: 70px;
+    object-fit: cover;
+    border-radius: 8px;
+    box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+}
+/* --- MODULE NOI: PROGRES, MAPS & OUTFIT --- */
+
+/* Containerul Hărții de Progres */
+.progress-container {
+    width: 90%; /* Mai lată pentru a respira stegulețele */
+    height: 8px; /* Mai finuță */
+    background: rgba(212, 175, 55, 0.15);
+    border-radius: 20px;
+    margin: 40px 0 20px 0; /* Spațiu sus pentru flag-uri, jos pentru conținut */
+    position: relative;
+    border: 1px solid rgba(214, 175, 55, 0.3);
+}
+
+/* Ajustare Flag-uri pentru a nu se mai ciocni textul */
+.progress-flag {
+    position: absolute;
+    top: -28px; 
+    transform: translateX(-50%);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    transition: all 0.5s ease;
+}
+
+.flag-label {
+    font-size: 0.55rem; /* Text mai mic pentru a încăpea toate */
+    font-weight: 600;
+    background: rgba(255, 255, 255, 0.9);
+    padding: 1px 5px;
+    border-radius: 3px;
+    border: 1px solid var(--accent-gold);
+    white-space: nowrap;
+    /* Afișăm doar flag-ul activ sau la hover pentru a evita haosul vizual */
+    opacity: 0.4; 
+}
+
+.progress-flag.active .flag-label {
+    opacity: 1;
+    background: var(--accent-gold);
+    color: white;
+    font-size: 0.65rem;
+    z-index: 30;
+}
+
+/* Fetele se mișcă liber pe drum */
+.progress-avatar {
+    position: absolute;
+    top: -18px;
+    z-index: 50;
+    font-size: 1.4rem;
+    transform: translateX(-50%);
+    filter: drop-shadow(0 2px 4px rgba(0,0,0,0.3));
+}
+
+
+/* Indicatorii pentru locații (puncte pe bară) */
+/* Container pentru etichete/stegulețe */
+#progress-markers {
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    top: 0;
+    left: 0;
+}
+
+/* Stilul pentru Flag-uri */
+.progress-flag {
+    position: absolute;
+    top: -35px; /* Deasupra barei */
+    transform: translateX(-50%);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    transition: all 0.5s ease;
+    opacity: 0.6; /* Aspect estompat pentru cele nevizitate */
+}
+
+.flag-label {
+    font-size: 0.6rem;
+    font-weight: 600;
+    background: white;
+    padding: 2px 6px;
+    border-radius: 4px;
+    border: 1px solid var(--accent-gold);
+    white-space: nowrap;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+}
+
+.flag-pole {
+    width: 2px;
+    height: 10px;
+    background: var(--accent-gold);
+}
+
+/* Starea pentru locații bifate (Active) */
+.progress-flag.active {
+    opacity: 1;
+    top: -40px; /* Se ridică puțin */
+}
+
+.progress-flag.active .flag-label {
+    background: var(--accent-gold);
+    color: white;
+}
+
+/* Emoji-ul fetițelor */
+.progress-avatar {
+    position: absolute;
+    top: -22px;
+    z-index: 20;
+    font-size: 1.6rem;
+    transform: translateX(-50%);
+    transition: left 0.8s cubic-bezier(0.34, 1.56, 0.64, 1);
+}
+
+/* Butonul Smart Navigare (Maps) */
+.maps-btn {
+    display: inline-block;
+    background: rgba(212, 175, 55, 0.1);
+    color: var(--accent-gold);
+    text-decoration: none;
+    padding: 6px 12px;
+    border-radius: 20px;
+    font-size: 0.75rem;
+    font-weight: 600;
+    margin-left: 10px;
+    border: 1px solid var(--accent-gold);
+    transition: all 0.3s ease;
+}
+
+.maps-btn:hover {
+    background: var(--accent-gold);
+    color: white;
+}
+
+/* Planificatorul de Outfit */
+.outfit-input {
+    width: calc(100% - 20px);
+    padding: 8px 10px;
+    margin-top: 10px;
+    margin-bottom: 15px;
+    border: 1px solid var(--accent-pink);
+    border-radius: 8px;
+    background: rgba(255, 255, 255, 0.7);
+    font-family: 'Montserrat', sans-serif;
+    font-size: 0.85rem;
+    color: var(--text-main);
+    transition: border 0.3s ease;
+}
+
+.outfit-input:focus {
+    outline: none;
+    border-color: var(--accent-gold);
+    background: #fff;
+}
+
+.outfit-input::placeholder {
+    color: #999;
+    font-style: italic;
+}
+
+
+@keyframes fadeIn {
+    from { opacity: 0; transform: translateY(-5px); }
+    to { opacity: 1; transform: translateY(0); }
+}

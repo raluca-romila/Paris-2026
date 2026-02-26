@@ -258,6 +258,57 @@ document.addEventListener('DOMContentLoaded', () => {
     renderApp();
     fetchParisWeather();
 });
-window.toggleBudget = function() {
-    document.getElementById('budget-modal').classList.toggle('hidden');
+// --- LOGICA PENTRU MODULUL DE BUGET ---
+
+// Setăm bugetul inițial și încărcăm cheltuielile salvate
+let initialBudget = 500;
+let expenses = JSON.parse(localStorage.getItem('paris2026_expenses')) || [];
+
+// Funcția apelată de butoanele din HTML
+window.addExpense = function(itemName, cost) {
+    // Adăugăm tranzacția în listă
+    expenses.push({ name: itemName, amount: cost, id: Date.now() });
+    
+    // Salvăm în memoria locală
+    localStorage.setItem('paris2026_expenses', JSON.stringify(expenses));
+    
+    // Actualizăm interfața vizuală
+    renderBudget();
 };
+
+// Funcția care redesenează balanța și lista
+function renderBudget() {
+    const amountEl = document.getElementById('budget-amount');
+    const listEl = document.getElementById('expense-list');
+    
+    if (!amountEl || !listEl) return;
+
+    // Calculăm totalul cheltuit
+    const totalSpent = expenses.reduce((sum, item) => sum + item.amount, 0);
+    const remaining = initialBudget - totalSpent;
+
+    // Actualizăm suma afișată
+    amountEl.innerText = `${remaining} €`;
+    
+    // Alertă vizuală chic: dacă mai ai sub 50€, suma devine roz închis/roșie
+    if (remaining < 50) {
+        amountEl.style.color = '#d63031';
+    } else {
+        amountEl.style.color = 'var(--accent-gold)';
+    }
+
+    // Desenăm lista cu tranzacții (cele mai noi primele)
+    listEl.innerHTML = '';
+    expenses.slice().reverse().forEach(item => {
+        const li = document.createElement('li');
+        li.innerHTML = `<span>${item.name}</span> <strong>-${item.amount} €</strong>`;
+        listEl.appendChild(li);
+    });
+}
+
+// IMPORTANT: Trebuie să chemăm funcția de desenare și la încărcarea paginii
+document.addEventListener('DOMContentLoaded', () => {
+    renderApp();
+    fetchParisWeather();
+    renderBudget(); // Afișăm bugetul salvat de la ultima vizită
+});

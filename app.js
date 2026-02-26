@@ -168,7 +168,6 @@ window.saveOutfit = function(event, id) {
     localStorage.setItem('paris2026_outfits', JSON.stringify(outfits));
 };
 
-// --- 4. GESTIONARE UI & DOM ---
 
 window.toggleDetails = function(id) {
     document.getElementById(`panel-${id}`).classList.toggle('active');
@@ -209,7 +208,6 @@ function renderApp() {
             const isDone = completedItems.includes(item.id);
             const savedOutfit = outfits[item.id] || '';
             
-            // LOGICA FIX NAVIGARE: Corecție pentru Orly și link-uri precise
             let queryTarget = item.title;
             if(item.id === "z1-1") queryTarget = "Aeroport de Paris-Orly";
             if(item.id === "z1-2") queryTarget = "Galeries Lafayette Haussmann";
@@ -260,3 +258,6 @@ document.addEventListener('DOMContentLoaded', () => {
     renderApp();
     fetchParisWeather();
 });
+window.toggleBudget = function() {
+    document.getElementById('budget-modal').classList.toggle('hidden');
+};

@@ -26,5 +26,25 @@
         </main>
 
     <script src="app.js"></script>
+    <button id="budget-fab" class="budget-fab" onclick="toggleBudget()">💳 Buget</button>
+
+    <div id="budget-modal" class="budget-modal hidden">
+        <div class="budget-modal-content">
+            <span class="close-budget" onclick="toggleBudget()">&times;</span>
+            <h3 class="budget-title">The Paris Budget</h3>
+            <div class="budget-balance">
+                <span>Disponibil:</span>
+                <span id="budget-amount" class="amount">500 €</span>
+            </div>
+            
+            <div class="budget-actions">
+                <button onclick="addExpense('Cafea/Patiserie', 10)">☕ 10€</button>
+                <button onclick="addExpense('Prânz/Cină', 45)">🍽️ 45€</button>
+                <button onclick="addExpense('Boutique/Shopping', 100)">🛍️ 100€</button>
+            </div>
+            
+            <ul id="expense-list" class="expense-list"></ul>
+        </div>
+    </div>
 </body>
 </html>

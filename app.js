@@ -276,6 +276,14 @@ window.addExpense = function(itemName, cost) {
     renderBudget();
 };
 
+// Funcția pentru deschiderea/închiderea panoului de buget
+window.toggleBudget = function() {
+    const modal = document.getElementById('budget-modal');
+    if (modal) {
+        modal.classList.toggle('hidden');
+    }
+};
+
 // Funcția care redesenează balanța și lista
 function renderBudget() {
     const amountEl = document.getElementById('budget-amount');

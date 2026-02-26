@@ -21,7 +21,7 @@ body {
 
 .app-header {
     text-align: center;
-    padding: 1.5rem 1rem 1rem; /* Padding redus */
+    padding: 1.5rem 1rem 1rem; 
     background: var(--card-bg);
     border-bottom: 2px solid var(--accent-pink);
     box-shadow: 0 4px 15px rgba(0,0,0,0.05);
@@ -32,12 +32,12 @@ body {
     display: flex;
     flex-direction: column;
     align-items: center;
-    gap: 10px; /* Spațiu egal între elemente */
+    gap: 10px; 
 }
 
 h1 {
     font-family: 'Playfair Display', serif;
-    font-size: 1.8rem; /* Puțin mai mic pentru a lăsa spațiu drumului */
+    font-size: 1.8rem; 
     margin: 0;
     color: var(--text-main);
     letter-spacing: 2px;
@@ -243,20 +243,17 @@ h1 {
     border-radius: 8px;
     box-shadow: 0 2px 5px rgba(0,0,0,0.1);
 }
-/* --- MODULE NOI: PROGRES, MAPS & OUTFIT --- */
 
-/* Containerul Hărții de Progres */
 .progress-container {
-    width: 90%; /* Mai lată pentru a respira stegulețele */
-    height: 8px; /* Mai finuță */
+    width: 90%; 
+    height: 8px; 
     background: rgba(212, 175, 55, 0.15);
     border-radius: 20px;
-    margin: 40px 0 20px 0; /* Spațiu sus pentru flag-uri, jos pentru conținut */
+    margin: 40px 0 20px 0; 
     position: relative;
     border: 1px solid rgba(214, 175, 55, 0.3);
 }
 
-/* Ajustare Flag-uri pentru a nu se mai ciocni textul */
 .progress-flag {
     position: absolute;
     top: -28px; 
@@ -268,14 +265,13 @@ h1 {
 }
 
 .flag-label {
-    font-size: 0.55rem; /* Text mai mic pentru a încăpea toate */
+    font-size: 0.55rem; 
     font-weight: 600;
     background: rgba(255, 255, 255, 0.9);
     padding: 1px 5px;
     border-radius: 3px;
     border: 1px solid var(--accent-gold);
     white-space: nowrap;
-    /* Afișăm doar flag-ul activ sau la hover pentru a evita haosul vizual */
     opacity: 0.4; 
 }
 
@@ -287,7 +283,6 @@ h1 {
     z-index: 30;
 }
 
-/* Fetele se mișcă liber pe drum */
 .progress-avatar {
     position: absolute;
     top: -18px;
@@ -297,9 +292,6 @@ h1 {
     filter: drop-shadow(0 2px 4px rgba(0,0,0,0.3));
 }
 
-
-/* Indicatorii pentru locații (puncte pe bară) */
-/* Container pentru etichete/stegulețe */
 #progress-markers {
     position: absolute;
     width: 100%;
@@ -308,16 +300,15 @@ h1 {
     left: 0;
 }
 
-/* Stilul pentru Flag-uri */
 .progress-flag {
     position: absolute;
-    top: -35px; /* Deasupra barei */
+    top: -35px; 
     transform: translateX(-50%);
     display: flex;
     flex-direction: column;
     align-items: center;
     transition: all 0.5s ease;
-    opacity: 0.6; /* Aspect estompat pentru cele nevizitate */
+    opacity: 0.6; 
 }
 
 .flag-label {
@@ -337,10 +328,9 @@ h1 {
     background: var(--accent-gold);
 }
 
-/* Starea pentru locații bifate (Active) */
 .progress-flag.active {
     opacity: 1;
-    top: -40px; /* Se ridică puțin */
+    top: -40px; 
 }
 
 .progress-flag.active .flag-label {
@@ -348,7 +338,6 @@ h1 {
     color: white;
 }
 
-/* Emoji-ul fetițelor */
 .progress-avatar {
     position: absolute;
     top: -22px;
@@ -358,7 +347,6 @@ h1 {
     transition: left 0.8s cubic-bezier(0.34, 1.56, 0.64, 1);
 }
 
-/* Butonul Smart Navigare (Maps) */
 .maps-btn {
     display: inline-block;
     background: rgba(212, 175, 55, 0.1);
@@ -378,7 +366,6 @@ h1 {
     color: white;
 }
 
-/* Planificatorul de Outfit */
 .outfit-input {
     width: calc(100% - 20px);
     padding: 8px 10px;
@@ -411,7 +398,6 @@ h1 {
 }
 
 @media (max-width: 600px) {
-    /* 1. Resetăm Header-ul să nu mai fie așa înalt */
     .app-header {
         padding: 1rem 0.5rem 0.5rem;
         display: flex;
@@ -419,38 +405,46 @@ h1 {
         align-items: center;
     }
 
-    /* 2. Micșorăm titlul să aibă loc */
     h1 {
         font-size: 1.4rem;
         margin-top: 10px;
     }
 
-    /* 3. Mutăm Meteo sub titlu, nu deasupra, ca să nu se bată cu restul */
+    
     .weather-info {
-        position: static; /* Nu mai plutește deasupra tuturor */
+        position: static; 
         margin-top: 5px;
         font-size: 0.7rem;
     }
 
-    /* 4. REZOLVARE FLAG-URI: Pe mobil, ascundem textul lor (label-ul) 
-       pentru că oricum e prea mic să fie citit și lăsăm doar drumul și fetele */
+
     .flag-label {
         display: none; 
     }
 
     .progress-container {
         width: 80%;
-        margin: 20px auto 10px; /* Mai mult spațiu în jur */
+        margin: 20px auto 10px; 
     }
 
     .progress-avatar {
-        font-size: 1.2rem; /* Fetele un pic mai mici să fie proporționale */
+        font-size: 1.2rem; 
         top: -18px;
     }
 
-    /* 5. Facem cardurile de zi (Ziua 1) să nu mai fie așa gigantice */
     .day-title {
         font-size: 1.2rem;
         padding: 0.2rem 0.6rem;
+    }
+    #progress-markers, 
+    .progress-step, 
+    .progress-flag, 
+    .flag-pole,
+    .flag-label {
+        display: none !important; 
+    }
+
+    .progress-container {
+        margin-top: 30px !important; 
     }
 }

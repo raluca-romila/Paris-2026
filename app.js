@@ -1,5 +1,28 @@
 /* ==========================================================================
-   1. BAZA DE DATE LOCALĂ (ITINERARIUL)
+   0. INIȚIALIZARE FIREBASE CLOUD (Sincronizare Live)
+   ========================================================================== */
+import { initializeApp } from "https://www.gstatic.com/firebasejs/12.9.0/firebase-app.js";
+import { getFirestore, doc, setDoc, onSnapshot } from "https://www.gstatic.com/firebasejs/12.9.0/firebase-firestore.js";
+import { getStorage, ref, uploadBytes, getDownloadURL } from "https://www.gstatic.com/firebasejs/12.9.0/firebase-storage.js";
+
+const firebaseConfig = {
+    apiKey: "AIzaSyBiN-GPQhbPaABne32KVKXRv8Gpe3YwLBc",
+    authDomain: "paris-2026-live-version.firebaseapp.com",
+    projectId: "paris-2026-live-version",
+    storageBucket: "paris-2026-live-version.firebasestorage.app",
+    messagingSenderId: "760857139636",
+    appId: "1:760857139636:web:011be06b530fc814d1fae1"
+};
+
+const app = initializeApp(firebaseConfig);
+const db = getFirestore(app);
+const storage = getStorage(app);
+
+const LIVE_DOC_ID = "paris_live_data"; 
+const docRef = doc(db, "sync", LIVE_DOC_ID);
+
+/* ==========================================================================
+   1. ITINERARIUL EXCURSIEI
    ========================================================================== */
 const itineraryData = [
     { id: "z1-1", day: "Ziua 1", time: "09:15", title: "Aterizare & Check-in", desc: "Aterizare Orly. Metrou M14 la Saint-Lazare, transfer L13 la Les Agnettes.", fullDetails: "Logistica: Căutăm indicatoarele M14 imediat după bagaje. Navigo se validează la intrare. Cazare la 11:30, pauză 30 min pentru refresh." },
@@ -21,37 +44,50 @@ const itineraryData = [
 ];
 
 /* ==========================================================================
-   2. PANOUL DE CONTROL (Salvarea pe Telefon / LocalStorage)
+   2. VARIABILE DE STARE ȘI SINCRONIZARE SERVER
    ========================================================================== */
-let completedItems = JSON.parse(localStorage.getItem('paris2026_progress')) || [];
-let outfits = JSON.parse(localStorage.getItem('paris2026_outfits')) || {};
+let completedItems = [];
+let outfits = {};
+let expenses = [];
+let photos = {}; 
 let initialBudget = 500;
-let expenses = JSON.parse(localStorage.getItem('paris2026_expenses')) || [];
+
+onSnapshot(docRef, (docSnap) => {
+    if (docSnap.exists()) {
+        const data = docSnap.data();
+        completedItems = data.completedItems || [];
+        outfits = data.outfits || {};
+        expenses = data.expenses || [];
+        photos = data.photos || {};
+        
+        renderApp();
+        renderBudget();
+    }
+});
+
+function saveToCloud() {
+    setDoc(docRef, { completedItems, outfits, expenses, photos }, { merge: true })
+        .catch(err => console.error("Eroare la salvare:", err));
+}
 
 /* ==========================================================================
-   3. MODULUL "CHIC BUDGET" (Logica Finaciară)
+   3. GESTIUNEA BUGETULUI (CHIC BUDGET)
    ========================================================================== */
-
-// Deschide/închide fereastra cu bugetul
 window.toggleBudget = function() {
     const modal = document.getElementById('budget-modal');
     if (modal) modal.classList.toggle('hidden');
 };
 
-// Deschide/închide formularul de adăugare cheltuială nouă
 window.toggleExpenseForm = function() {
     const form = document.getElementById('expense-form');
     if (form) form.classList.toggle('hidden');
 };
 
-// Salvează o cheltuială în istoric
 window.addExpense = function(itemName, cost) {
     expenses.push({ name: itemName, amount: cost, id: Date.now() });
-    localStorage.setItem('paris2026_expenses', JSON.stringify(expenses));
-    renderBudget();
+    saveToCloud(); 
 };
 
-// Preia datele din formular și face validările
 window.submitCustomExpense = function() {
     const category = document.getElementById('expense-category').value;
     const amountInput = document.getElementById('expense-amount');
@@ -63,27 +99,21 @@ window.submitCustomExpense = function() {
     }
 
     addExpense(category, amount);
-    amountInput.value = ''; // Resetăm căsuța
-    toggleExpenseForm();    // Ascundem formularul pentru un look curat
+    amountInput.value = ''; 
+    toggleExpenseForm();    
 };
 
-// Calculează și desenează pe ecran banii rămași
 function renderBudget() {
     const amountEl = document.getElementById('budget-amount');
     const listEl = document.getElementById('expense-list');
-    
     if (!amountEl || !listEl) return;
 
-    // Aflăm câți bani au fost cheltuiți în total
     const totalSpent = expenses.reduce((sum, item) => sum + item.amount, 0);
     const remaining = initialBudget - totalSpent;
 
     amountEl.innerText = `${remaining} €`;
-    
-    // Alarma vizuală: Sub 50 de euro textul se face roșu!
     amountEl.style.color = remaining < 50 ? '#d63031' : 'var(--accent-gold)';
 
-    // Desenăm lista de bonuri (cele mai noi primele)
     listEl.innerHTML = '';
     expenses.slice().reverse().forEach(item => {
         const li = document.createElement('li');
@@ -93,16 +123,13 @@ function renderBudget() {
 }
 
 /* ==========================================================================
-   4. GENERAREA INTERFEȚEI ȘI INTERACTIVITATEA
+   4. RENDERIZARE DOM ȘI EVENIMENTE UI
    ========================================================================== */
-
-// Funcția care desenează tot planul pe ecran
 function renderApp() {
     const container = document.getElementById('itinerary-container');
     if(!container) return;
     container.innerHTML = ''; 
 
-    // Grupăm obiectivele pe zile
     const days = [...new Set(itineraryData.map(item => item.day))];
 
     days.forEach(day => {
@@ -111,15 +138,20 @@ function renderApp() {
         daySection.className = 'day-section';
         daySection.innerHTML = `<h2 class="day-title">${day}</h2>`;
 
-        // Generăm cardul pentru fiecare destinație
         dayItems.forEach(item => {
             const isDone = completedItems.includes(item.id);
             const savedOutfit = outfits[item.id] || '';
+            const locationPhotos = photos[item.id] || [];
             
             let queryTarget = item.title;
             if(item.id === "z1-1") queryTarget = "Aeroport de Paris-Orly";
             if(item.id === "z1-2") queryTarget = "Galeries Lafayette Haussmann";
-            const mapsUrl = `http://googleusercontent.com/maps.google.com/2{encodeURIComponent(queryTarget + ' Paris')}`;
+            const mapsUrl = `http://googleusercontent.com/maps.google.com/3{encodeURIComponent(queryTarget + ' Paris')}`;
+            
+            let imagesHtml = '';
+            locationPhotos.forEach(url => {
+                imagesHtml += `<img src="${url}" class="grid-image" alt="Amintire Paris">`;
+            });
             
             const card = document.createElement('div');
             card.className = `card ${isDone ? 'completed' : ''}`;
@@ -137,10 +169,12 @@ function renderApp() {
                         <p class="full-details-text">${item.fullDetails}</p>
                         <input type="text" class="outfit-input" placeholder="👗 Planifică ținuta aici..." value="${savedOutfit}" onchange="saveOutfit(event, '${item.id}')">
                         <div class="upload-section">
-                            <label for="file-${item.id}" class="upload-btn">📷 Adaugă Amintiri (Max 10)</label>
+                            <label for="file-${item.id}" class="upload-btn">📷 Urcă Poze în Cloud</label>
                             <input type="file" id="file-${item.id}" class="hidden-file-input" multiple accept="image/*" onchange="handleImageUpload(event, '${item.id}')">
                         </div>
-                        <div class="image-grid" id="grid-${item.id}"></div>
+                        <div class="image-grid" id="grid-${item.id}">
+                            ${imagesHtml}
+                        </div>
                     </div>
                 </div>
                 <div class="custom-checkbox" onclick="toggleComplete('${item.id}')"></div>
@@ -150,11 +184,9 @@ function renderApp() {
         container.appendChild(daySection);
     });
     
-    // De fiecare dată când desenăm, actualizăm și bara de deasupra
     updateProgress();
 }
 
-// Actualizează fetele de pe bara de progres (desktop)
 function updateProgress() {
     const total = itineraryData.length;
     const progressBar = document.getElementById('app-progress');
@@ -166,7 +198,6 @@ function updateProgress() {
 
     let lastCompletedIndex = -1;
 
-    // Punem textele mici doar pe desktop, pe mobil le ascundem din CSS
     itineraryData.forEach((item, index) => {
         const isDone = completedItems.includes(item.id);
         const positionPercent = (index / (total - 1)) * 100;
@@ -177,26 +208,20 @@ function updateProgress() {
         flag.className = `progress-flag ${isDone ? 'active' : ''}`;
         flag.style.left = `${positionPercent}%`;
         
-        const shortTitle = item.title.split(' ')[0]; // Primul cuvânt
-        flag.innerHTML = `
-            <span class="flag-label">${shortTitle}</span>
-            <div class="flag-pole"></div>
-        `;
+        const shortTitle = item.title.split(' ')[0];
+        flag.innerHTML = `<span class="flag-label">${shortTitle}</span><div class="flag-pole"></div>`;
         markersContainer.appendChild(flag);
     });
 
-    // Avansăm fetele la ultima oprire bifată
     if (avatar) {
         const finalPos = lastCompletedIndex === -1 ? 0 : (lastCompletedIndex / (total - 1)) * 100;
         avatar.style.left = `${finalPos}%`;
     }
 
-    // Umplem bara aurie cu procentul corespunzător
     const percentage = total > 0 ? (completedItems.length / total) * 100 : 0;
     if (progressBar) progressBar.style.width = `${percentage}%`;
 }
 
-// Ce se întâmplă când dai click pe "bifă"
 window.toggleComplete = function(id) {
     const itemData = itineraryData.find(i => i.id === id);
     const day = itemData.day;
@@ -205,64 +230,55 @@ window.toggleComplete = function(id) {
         completedItems = completedItems.filter(itemId => itemId !== id);
     } else {
         completedItems.push(id);
-        
-        // Verificăm dacă ai terminat toate locațiile dintr-o zi
         const dayItems = itineraryData.filter(i => i.day === day).map(i => i.id);
         const isDayComplete = dayItems.every(itemId => completedItems.includes(itemId));
-        if (isDayComplete) triggerConfetti(); // Magia când se termină ziua!
+        if (isDayComplete) triggerConfetti(); 
     }
     
-    localStorage.setItem('paris2026_progress', JSON.stringify(completedItems));
-    renderApp();
+    saveToCloud(); 
 };
 
-// Ploaia de confetti
 function triggerConfetti() {
-    confetti({
-        particleCount: 120,
-        spread: 80,
-        origin: { y: 0.7 },
-        colors: ['#D4AF37', '#E8C6C5', '#FAF6F0']
-    });
+    if (typeof confetti !== "undefined") {
+        confetti({ particleCount: 120, spread: 80, origin: { y: 0.7 }, colors: ['#D4AF37', '#E8C6C5', '#FAF6F0'] });
+    }
 }
 
-// Salvare text Outfit
 window.saveOutfit = function(event, id) {
     outfits[id] = event.target.value;
-    localStorage.setItem('paris2026_outfits', JSON.stringify(outfits));
+    saveToCloud(); 
 };
 
-// Deschide meniul de Detalii & Foto
 window.toggleDetails = function(id) {
     document.getElementById(`panel-${id}`).classList.toggle('active');
 };
 
-// Inserare Poze
-window.handleImageUpload = function(event, id) {
+window.handleImageUpload = async function(event, id) {
     const files = event.target.files;
-    const grid = document.getElementById(`grid-${id}`);
+    if (files.length === 0) return;
     
-    if (files.length > 10) {
-        alert("Maxim 10 fotografii per locație!");
-        event.target.value = ''; 
-        return;
+    alert("Încărcăm imaginile în cloud... Te rog așteaptă!");
+    
+    if (!photos[id]) photos[id] = [];
+    
+    try {
+        for (let file of files) {
+            const fileRef = ref(storage, `paris_photos/${id}/${Date.now()}_${file.name}`);
+            const snapshot = await uploadBytes(fileRef, file);
+            const downloadURL = await getDownloadURL(snapshot.ref);
+            photos[id].push(downloadURL);
+        }
+        saveToCloud(); 
+        alert("Imaginile au fost salvate cu succes!");
+    } catch (error) {
+        console.error("Eroare la upload:", error);
+        alert("A apărut o eroare la încărcarea pozelor.");
     }
-    
-    grid.innerHTML = ''; 
-    Array.from(files).forEach(file => {
-        const imgUrl = URL.createObjectURL(file);
-        const imgElement = document.createElement('img');
-        imgElement.src = imgUrl;
-        imgElement.className = 'grid-image';
-        grid.appendChild(imgElement);
-    });
 };
 
 /* ==========================================================================
-   5. INIȚIALIZARE ȘI API (Aducerea la viață)
+   5. INIȚIALIZARE DATE METEO ȘI PORNIRE APLICAȚIE
    ========================================================================== */
-
-// Aduce vremea în timp real pentru Paris
 async function fetchParisWeather() {
     try {
         const response = await fetch('https://api.open-meteo.com/v1/forecast?latitude=48.8566&longitude=2.3522&current_weather=true');
@@ -273,7 +289,6 @@ async function fetchParisWeather() {
     }
 }
 
-// Momentul în care pagina s-a încărcat: "Motor, Acțiune!"
 document.addEventListener('DOMContentLoaded', () => {
     renderApp();
     fetchParisWeather();

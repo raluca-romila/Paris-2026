@@ -18,7 +18,7 @@ const app = initializeApp(firebaseConfig);
 const db = getFirestore(app);
 const storage = getStorage(app);
 
-const LIVE_DOC_ID = "paris_live_data"; 
+const LIVE_DOC_ID = "paris_2026_oficial"; 
 const docRef = doc(db, "sync", LIVE_DOC_ID);
 
 /* ==========================================================================

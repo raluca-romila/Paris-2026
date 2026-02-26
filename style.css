@@ -516,6 +516,64 @@ h1 {
     padding: 5px 0;
     color: #666;
 }
+/* --- FORMULARUL DINAMIC DE CHELTUIELI --- */
+.expense-form {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    margin-bottom: 15px;
+    transition: all 0.3s ease;
+}
+
+.expense-form.hidden {
+    display: none;
+}
+
+.chic-input {
+    width: 100%;
+    padding: 10px;
+    border: 1px solid var(--accent-gold);
+    border-radius: 12px;
+    font-family: 'Montserrat', sans-serif;
+    font-size: 0.9rem;
+    background: rgba(255, 255, 255, 0.8);
+    color: var(--text-main);
+    box-sizing: border-box;
+}
+
+.chic-input:focus {
+    outline: none;
+    border-color: var(--accent-pink);
+    background: #fff;
+}
+
+.chic-submit {
+    background: var(--accent-gold);
+    color: white;
+    border: none;
+    padding: 10px;
+    border-radius: 12px;
+    font-family: 'Montserrat', sans-serif;
+    font-weight: 600;
+    cursor: pointer;
+    transition: background 0.3s ease;
+}
+
+.chic-submit:hover {
+    background: #b5952f;
+}
+
+/* Modificare buton principal de adăugare */
+.budget-actions button {
+    background: transparent;
+    border: 1px dashed var(--accent-gold);
+    color: var(--accent-gold);
+    padding: 10px 15px;
+    border-radius: 15px;
+    font-weight: 600;
+    width: 100%;
+    cursor: pointer;
+}
 
 @media (max-width: 600px) {
     .app-header {

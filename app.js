@@ -275,6 +275,31 @@ window.addExpense = function(itemName, cost) {
     // Actualizăm interfața vizuală
     renderBudget();
 };
+// Afișează sau ascunde formularul de introducere manuală
+window.toggleExpenseForm = function() {
+    const form = document.getElementById('expense-form');
+    if (form) form.classList.toggle('hidden');
+};
+
+// Preia datele din formular, validează suma și o salvează
+window.submitCustomExpense = function() {
+    const category = document.getElementById('expense-category').value;
+    const amountInput = document.getElementById('expense-amount');
+    const amount = parseFloat(amountInput.value);
+
+    // Validare: suma trebuie să fie un număr mai mare ca 0
+    if (!amount || amount <= 0) {
+        alert("Te rog introdu o sumă validă!");
+        return;
+    }
+
+    // Refolosim funcția de salvare existentă
+    addExpense(category, amount);
+    
+    // Resetăm câmpul de text și ascundem formularul pentru un flux curat
+    amountInput.value = '';
+    toggleExpenseForm(); 
+};
 
 // Funcția pentru deschiderea/închiderea panoului de buget
 window.toggleBudget = function() {

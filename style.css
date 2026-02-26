@@ -576,6 +576,7 @@ h1 {
 }
 
 @media (max-width: 600px) {
+    /* --- 1. HEADER & PROGRES (Codul tău curățat și unificat) --- */
     .app-header {
         padding: 1rem 0.5rem 0.5rem;
         display: flex;
@@ -588,21 +589,15 @@ h1 {
         margin-top: 10px;
     }
 
-    
     .weather-info {
         position: static; 
         margin-top: 5px;
         font-size: 0.7rem;
     }
 
-
-    .flag-label {
-        display: none; 
-    }
-
     .progress-container {
         width: 80%;
-        margin: 20px auto 10px; 
+        margin: 30px auto 10px !important; /* Unificat pentru spațiere corectă */
     }
 
     .progress-avatar {
@@ -614,16 +609,33 @@ h1 {
         font-size: 1.2rem;
         padding: 0.2rem 0.6rem;
     }
-    #progress-markers, 
-    .progress-step, 
-    .progress-flag, 
-    .flag-pole,
-    .flag-label {
+
+    #progress-markers, .progress-step, .progress-flag, .flag-pole, .flag-label {
         display: none !important; 
     }
 
-    .progress-container {
-        margin-top: 30px !important; 
+    /* --- 2. PANOU DE BUGET (Optimizări pentru degete și ecran tactil) --- */
+    .budget-modal-content {
+        padding: 20px 15px 30px 15px; /* Mai mult spațiu în partea de jos */
     }
-   
+
+    .budget-title {
+        font-size: 1.3rem;
+    }
+
+    /* Regula de aur iOS: font-size MINIM 16px pentru a opri auto-zoom-ul */
+    .chic-input {
+        font-size: 16px !important; 
+        padding: 12px; /* Mai mult spațiu interior pentru a fi ușor de atins */
+    }
+
+    /* Butoane mai late și mai ușor de apăsat din mers */
+    .chic-submit, .budget-actions button {
+        font-size: 1rem;
+        padding: 12px; 
+    }
+
+    .expense-list {
+        max-height: 140px; /* Lăsăm suficient spațiu vizibil pentru istoric */
+    }
 }

@@ -12,32 +12,34 @@
     <header class="app-header">
         <h1>Paris 2026</h1>
         <p class="subtitle">Arhitectură, Haute Couture & Vibe Boem</p>
+        
         <div id="weather-widget" class="weather-info">
             🌤️ Se încarcă vremea din Paris...
         </div>
+        
         <div class="progress-container">
-    <div class="progress-avatar" id="avatar-girls">👯‍♀️</div>
-    <div class="progress-bar" id="app-progress"></div>
-    <div id="progress-markers"></div>
-</div>
+            <div class="progress-avatar" id="avatar-girls">👯‍♀️</div>
+            <div class="progress-bar" id="app-progress"></div>
+            <div id="progress-markers"></div>
+        </div>
     </header>
     
     <main id="itinerary-container">
-        </main>
+    </main>
 
-    <script src="app.js"></script>
     <button id="budget-fab" class="budget-fab" onclick="toggleBudget()">💳 Buget</button>
 
     <div id="budget-modal" class="budget-modal hidden">
         <div class="budget-modal-content">
             <span class="close-budget" onclick="toggleBudget()">&times;</span>
             <h3 class="budget-title">The Paris Budget</h3>
+            
             <div class="budget-balance">
                 <span>Disponibil:</span>
                 <span id="budget-amount" class="amount">500 €</span>
             </div>
             
-           <div class="budget-actions">
+            <div class="budget-actions">
                 <button id="btn-show-form" onclick="toggleExpenseForm()">➕ Adaugă Cheltuială</button>
             </div>
             
@@ -58,5 +60,7 @@
             <ul id="expense-list" class="expense-list"></ul>
         </div>
     </div>
+
+    <script src="app.js"></script>
 </body>
 </html>

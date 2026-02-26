@@ -18,7 +18,7 @@ const app = initializeApp(firebaseConfig);
 const db = getFirestore(app);
 const storage = getStorage(app);
 
-const LIVE_DOC_ID = "paris_2026_oficial"; 
+const LIVE_DOC_ID = "paris_live_data"; 
 const docRef = doc(db, "sync", LIVE_DOC_ID);
 
 /* ==========================================================================
@@ -86,6 +86,7 @@ window.toggleExpenseForm = function() {
 window.addExpense = function(itemName, cost) {
     expenses.push({ name: itemName, amount: cost, id: Date.now() });
     saveToCloud(); 
+    renderBudget(); // Corectură: Actualizare instantanee UI
 };
 
 window.submitCustomExpense = function() {
@@ -146,7 +147,9 @@ function renderApp() {
             let queryTarget = item.title;
             if(item.id === "z1-1") queryTarget = "Aeroport de Paris-Orly";
             if(item.id === "z1-2") queryTarget = "Galeries Lafayette Haussmann";
-            const mapsUrl = `http://googleusercontent.com/maps.google.com/3{encodeURIComponent(queryTarget + ' Paris')}`;
+            
+            // Corectură: Sintaxă URL validă pentru Google Maps
+            const mapsUrl = `https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(queryTarget + ' Paris')}`;
             
             let imagesHtml = '';
             locationPhotos.forEach(url => {
@@ -236,6 +239,7 @@ window.toggleComplete = function(id) {
     }
     
     saveToCloud(); 
+    renderApp(); // Corectură: Actualizare instantanee UI
 };
 
 function triggerConfetti() {
